@@ -50,13 +50,6 @@ if ($caseID) {
     $victimsList = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }
 
-// Fetch all criminals for the popup list
-$allCriminals = [];
-$result = $conn->query("SELECT criminal_id, full_name, gender, status FROM criminals ORDER BY full_name ASC");
-if ($result) {
-    $allCriminals = $result->fetch_all(MYSQLI_ASSOC);
-}
-
 // Handle Add Criminal
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_criminal'])) {
     $criminal_name = $_POST['criminal_name'];
@@ -77,31 +70,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_criminal'])) {
     exit;
 }
 
-// Handle Linking Existing Criminal
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['link_criminal'])) {
-    $criminal_id = $_POST['criminal_id'];
-    $role = $_POST['role'] ?? 'Suspect';
-    $status = $_POST['status'] ?? 'ONGOING';
-
-    $stmt = $conn->prepare("INSERT IGNORE INTO criminal_case (criminal_id, case_id, role) VALUES (?, ?, ?)");
-    $stmt->bind_param("iis", $criminal_id, $caseID, $role);
-    $stmt->execute();
-
-    if ($isOC) {
-        $stmt = $conn->prepare("UPDATE criminals SET status=? WHERE criminal_id=?");
-        $stmt->bind_param("si", $status, $criminal_id);
-        $stmt->execute();
-    }
-
-    header("Location: update_case.php?case_id=$caseID");
-    exit;
-}
-
 // Handle Add Evidence
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
     $evidence_desc = $_POST['evidence_desc'];
     $file_location = $_POST['evidence_file'];
 
+    // if (!empty($_FILES['evidence_file']['name'])) {
+    //     $target_dir = "evidences/";
+    //     if(!is_dir($target_dir)) mkdir($target_dir, 0777, true);
+    //     $target_file = $target_dir . basename($_FILES["evidence_file"]["name"]);
+    //     if (move_uploaded_file($_FILES["evidence_file"]["tmp_name"], $target_file)) {
+    //         $file_location = $target_file;
+    //     }
+    // }
+    
     $stmt = $conn->prepare("INSERT INTO evidence (case_id, description, file_location) VALUES (?, ?, ?)");
     $stmt->bind_param("iss", $caseID, $evidence_desc, $file_location);
     $stmt->execute();
@@ -119,8 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
 <title>Update Case - Police Database</title>
 <link rel="stylesheet" href="dashboard.css">
 <link rel="stylesheet" href="updatecase.css">
-</head>
-<body>
+
 
 <header class="header">
     <div class="header-left">
@@ -130,13 +111,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
         <a href="dashboard.php">Dashboard</a>
         <a href="add_case.php">Add Case</a>
         <a href="update_case.php">Update Case</a>
-        <a href="search_case.php">Search Cases</a>
+        <a href="Search_case.php">Search Cases</a>
         <a href="criminal_data.php">Criminal Data Search</a>
         <a href="logout.php" class="logout">Logout</a>
     </nav>
 </header>
 <div class="header-spacer"></div>
-
 <div class="container">
 <h2>Update Case</h2>
 
@@ -159,17 +139,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
 <?php endforeach; ?>
 </ul>
 
-<h3>Criminals 
-  <button type="button" class="button" onclick="toggleCriminalForm()">Add New</button>
-  <button type="button" class="button" onclick="openCriminalPopup()">Choose Existing</button>
-</h3>
+<h3>Criminals <button type="button" class="button" onclick="toggleCriminalForm()">Add Criminal</button></h3>
 <ul>
 <?php foreach($criminalsList as $c): ?>
 <li><?= htmlspecialchars($c['full_name']) ?> - <?= htmlspecialchars($c['role']) ?> (<?= htmlspecialchars($c['status']) ?>)</li>
 <?php endforeach; ?>
 </ul>
 
-<!-- Add New Criminal Form -->
 <div id="addCriminalForm" class="toggleForm">
 <h4>Add New Criminal</h4>
 <form method="POST">
@@ -198,43 +174,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
 </form>
 </div>
 
-<!-- Choose Existing Criminal Popup -->
-<div id="criminalPopup" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeCriminalPopup()">&times;</span>
-    <h4>Select Existing Criminal</h4>
-    <input type="text" id="criminalSearch" placeholder="Search criminal by name..." onkeyup="filterCriminals()">
-    <ul id="criminalList">
-      <?php foreach($allCriminals as $cr): ?>
-        <li>
-          <form method="POST" style="display:inline;">
-            <input type="hidden" name="link_criminal" value="1">
-            <input type="hidden" name="criminal_id" value="<?= $cr['criminal_id'] ?>">
-            <span><b><?= htmlspecialchars($cr['full_name']) ?></b> (<?= $cr['gender'] ?>, <?= $cr['status'] ?>)</span><br>
-            <label>Role:</label>
-            <input type="text" name="role" value="Suspect">
-            <?php if($isOC): ?>
-            <label>Status:</label>
-            <select name="status">
-                <option value="ONGOING">ONGOING</option>
-                <option value="IMPRISONED">IMPRISONED</option>
-                <option value="FUGITIVE">FUGITIVE</option>
-                <option value="FREE">FREE</option>
-            </select>
-            <?php endif; ?>
-            <button type="submit" class="button">Link</button>
-          </form>
-        </li>
-      <?php endforeach; ?>
-    </ul>
-  </div>
-</div>
-
 <h3>Evidence <button type="button" class="button" onclick="toggleEvidenceForm()">Add Evidence</button></h3>
 <ul>
 <?php foreach($evidenceList as $e): ?>
     <li>
         <?= htmlspecialchars($e['description']) ?>
+
         <?php if (!empty($e['file_location'])): ?>
             <button class="view-btn" onclick="showEvidence('<?= $e['file_location'] ?>')">View</button>
         <?php endif; ?>
@@ -249,6 +194,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
     <div id="evidenceDisplay"></div>
   </div>
 </div>
+
+
 
 <div id="addEvidenceForm" class="toggleForm">
 <h4>Add Evidence</h4>
@@ -278,20 +225,8 @@ function toggleEvidenceForm() {
     var f = document.getElementById("addEvidenceForm");
     f.style.display = f.style.display==="none"?"block":"none";
 }
-function openCriminalPopup() {
-    document.getElementById("criminalPopup").style.display = "block";
-}
-function closeCriminalPopup() {
-    document.getElementById("criminalPopup").style.display = "none";
-}
-function filterCriminals() {
-    let input = document.getElementById("criminalSearch").value.toLowerCase();
-    let lis = document.querySelectorAll("#criminalList li");
-    lis.forEach(li => {
-        let text = li.innerText.toLowerCase();
-        li.style.display = text.includes(input) ? "" : "none";
-    });
-}
+</script>
+<script>
 function showEvidence(filePath) {
     let display = document.getElementById("evidenceDisplay");
     display.innerHTML = "";
@@ -299,25 +234,36 @@ function showEvidence(filePath) {
     if (filePath.match(/\.(jpg|jpeg|png|gif)$/i)) {
         display.innerHTML = `<img src="${filePath}" alt="Evidence Image">`;
     } else if (filePath.match(/\.(mp4|webm|ogg)$/i)) {
-        display.innerHTML = `<video controls><source src="${filePath}" type="video/mp4">Your browser does not support video.</video>`;
+        display.innerHTML = `<video controls>
+                                <source src="${filePath}" type="video/mp4">
+                                Your browser does not support video playback.
+                             </video>`;
     } else {
         display.innerHTML = `<a href="${filePath}" target="_blank">Download Evidence</a>`;
     }
 
     document.getElementById("evidenceModal").style.display = "block";
 }
+
 function closeModal() {
     document.getElementById("evidenceModal").style.display = "none";
 }
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', function () {
   const header = document.querySelector('header.header');
   const spacer = document.querySelector('.header-spacer');
   if (!header || !spacer) return;
-  function setSpacerHeight() { spacer.style.height = header.offsetHeight + 'px'; }
+
+  function setSpacerHeight() {
+    spacer.style.height = header.offsetHeight + 'px';
+  }
+
   setSpacerHeight();
   window.addEventListener('resize', setSpacerHeight);
 });
 </script>
+
 
 </body>
 </html>

@@ -125,6 +125,13 @@ function validateForm() {
     }
     return true;
 }
+window.onclick = function(event) {
+  let modal = document.getElementById("evidenceModal");
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
 </script>
 
 </body>
