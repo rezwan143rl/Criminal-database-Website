@@ -1,0 +1,132 @@
+
+
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+     font-family: Arial, sans-serif;
+ }
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url(Images/Background.jpg);  
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    color: #fff;
+}
+ /* Header */
+ header {
+     background: #1e2a38;
+     color: #fff;
+     padding: 20px;
+ }
+
+ header h1 {
+     margin-bottom: 10px;
+
+ }
+
+ nav {
+     display: flex;
+     gap: 20px;
+     flex-wrap: wrap;
+ }
+
+ nav a {
+     color: #fff;
+     text-decoration: none;
+     background-color: #2f3e50;
+     padding: 10px 15px;
+     border-radius: 5px;
+     transition: background-color 0.3s;
+ }
+
+ nav a:hover {
+     background-color: #4a5a70;
+ }
+
+ /* Main content */
+ .container {
+     padding: 20px;
+ }
+
+ .section {
+     background-color: #456f8bff;
+     padding: 20px;
+     margin-bottom: 20px;
+     border-radius: 8px;
+     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+ }
+
+ h2 {
+     margin-bottom: 15px;
+ }
+
+ .oc-features {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 15px;
+ }
+
+ .oc-features button {
+     padding: 10px 20px;
+     border: none;
+     background-color: #d9534f;
+     color: #fff;
+     border-radius: 5px;
+     cursor: pointer;
+     transition: background-color 0.3s;
+ }
+ .button {
+     display: inline-block;
+     padding: 10px 20px;
+     background-color: #4d5c76;
+     color: #fff;
+     text-decoration: none;
+     border-radius: 5px;
+     transition: background-color 0.3s;
+     margin: 5px 0;
+ }
+
+ .button:hover {
+     background-color: hwb(220 32% 53%);
+ }
+
+ .oc-features button:hover {
+     background-color: #c9302c;
+ }
+
+ /* Footer */
+ footer {
+     background-color: #1e2a38;
+     color: #fff;
+     text-align: center;
+     padding: 15px;
+     position: fixed;
+     width: 100%;
+     bottom: 0;
+ }
+
+ footer p {
+     font-size: 14px;
+ }
+
+ @media (max-width: 600px) {
+     nav {
+         flex-direction: column;
+     }
+
+     .oc-features {
+         flex-direction: column;
+     }
+ }
+
