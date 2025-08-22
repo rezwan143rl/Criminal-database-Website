@@ -58,11 +58,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <header>
     <h1>Police Criminal Database Dashboard</h1>
-    <nav>
-        <a href="add_case.php">Add Case</a>
-        <a href="update_case.php">Update Case</a>
-        <a href="Search_case.php">Search Criminal</a>
-        <a href="criminal_data.php">Criminal Data Search</a>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="dashboard.php">Dashboard</a>
+            <a href="add_case.php">Add Case</a>
+            <a href="update_case.php">Update Case</a>
+            <a href="Search_case.php">Search Cases</a>
+            <a href="criminal_data.php">Criminal Data Search</a>
+        </div>
+        <div class="nav-right">
+            <a href="logout.php">Logout</a>
+        </div>
     </nav>
 </header>
 

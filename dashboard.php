@@ -20,20 +20,24 @@ $isOC = (strtolower($rank) === 'oc');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="dashboard.css">
-    <title>Police Dashboard</title>
+    <title>Dashboard</title>
    
 </head>
 <body>
 
-<header>
-    <h1>Police Criminal Database Dashboard</h1>
-    <nav>
+<header class="header">
+    <div class="header-left">
+        <h1>Police Criminal Database Dashboard</h1>
+    </div>
+    <nav class="header-right">
         <a href="add_case.php">Add Case</a>
         <a href="update_case.php">Update Case</a>
-        <a href="Search_case.php">Search Criminal</a>
+        <a href="Search_case.php">Search Cases</a>
         <a href="criminal_data.php">Criminal Data Search</a>
+        <a href="logout.php" class="logout">Logout</a>
     </nav>
 </header>
+
 <?php
 if ($isOC == 'oc'){
 ?>
