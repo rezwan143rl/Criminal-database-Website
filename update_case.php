@@ -50,14 +50,13 @@ if ($caseID) {
     $victimsList = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }
 
-// Fetch all criminals for the popup list
 $allCriminals = [];
 $result = $conn->query("SELECT criminal_id, full_name, gender, status FROM criminals ORDER BY full_name ASC");
 if ($result) {
     $allCriminals = $result->fetch_all(MYSQLI_ASSOC);
 }
 
-// Handle Add Criminal
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_criminal'])) {
     $criminal_name = $_POST['criminal_name'];
     $gender = $_POST['gender'];
@@ -97,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['link_criminal'])) {
     exit;
 }
 
-// Handle Add Evidence
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
     $evidence_desc = $_POST['evidence_desc'];
     $file_location = $_POST['evidence_file'];
@@ -234,8 +233,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
 <ul>
 <?php foreach($evidenceList as $e): ?>
     <li>
+        <?php echo $e['file_location'] ?>
         <?= htmlspecialchars($e['description']) ?>
-        <?php if (!empty($e['file_location'])): ?>
+        <?php if (!empty($e['file_location'])): ?> 
             <button class="view-btn" onclick="showEvidence('<?= $e['file_location'] ?>')">View</button>
         <?php endif; ?>
     </li>
