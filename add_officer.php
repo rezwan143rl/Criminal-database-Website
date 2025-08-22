@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 
 <header>
-    <h1><a href="dashboard.php">Police Criminal Database Dashboard</a></h1>
+    <h1>Police Criminal Database Dashboard</h1>
     <nav class="navbar">
         <div class="nav-left">
             <a href="dashboard.php">Dashboard</a>

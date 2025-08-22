@@ -48,30 +48,30 @@ $officers = $result->fetch_all(MYSQLI_ASSOC);
         th { background: rgba(0,0,0,0.7);}
         td { background: rgba(0,0,0,0.5);}
         input[type="number"], select { padding: 5px; margin: 5px 0;}
-        /* General button style */
-button, a.button {
-    padding: 8px 15px;
-    margin: 5px 0;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #fff;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
-}
+        
+        button, a.button {
+            padding: 8px 15px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
 
-/* Delete button */
-button.delete {
-    background-color: #ec0033ff;  /* Red for delete */
-}
 
-/* Hover effect */
-button:hover {
-    opacity: 0.85;
-    transform: translateY(-1px);
-}
+        button.delete {
+            background-color: #ec0033ff;  /* Red for delete */
+        }
+
+        
+        button:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
 
     </style>
 </head>
