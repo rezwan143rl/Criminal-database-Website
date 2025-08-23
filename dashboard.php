@@ -60,7 +60,7 @@ if ($isOC == 'oc'){
 ?>
 
 <footer>
-    <p>Developed by:</p>
+    <p>Developed by:REZWAN, SHORONIKA, RIZWAN, RAHI</p>
 </footer>
 
 </body>

@@ -24,7 +24,6 @@ if (isset($_GET['delete_id'])) {
     $stmt->close();
 }
 
-// Fetch all evidence with case info
 $sql = "
     SELECT e.ev_id, e.description, e.file_location, 
            c.case_id, c.case_title

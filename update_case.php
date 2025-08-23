@@ -99,8 +99,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['link_criminal'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
     $evidence_desc = $_POST['evidence_desc'];
-    $file_location = $_POST['evidence_file'];
+    
+    // Handle file upload
+    $file_location = null;
+    if (isset($_FILES['evidence_file']) && $_FILES['evidence_file']['error'] == 0) {
+        $targetDir = "evidences/";
+        
+        // Ensure folder exists
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
 
+        $fileName = basename($_FILES['evidence_file']['name']);
+        $targetFile = $targetDir . time() . "_" . $fileName; // unique name
+        
+        if (move_uploaded_file($_FILES['evidence_file']['tmp_name'], $targetFile)) {
+            $file_location = $targetFile;
+        }
+    }
+
+    // Insert into DB
     $stmt = $conn->prepare("INSERT INTO evidence (case_id, description, file_location) VALUES (?, ?, ?)");
     $stmt->bind_param("iss", $caseID, $evidence_desc, $file_location);
     $stmt->execute();
@@ -108,6 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_evidence'])) {
     header("Location: update_case.php?case_id=$caseID");
     exit;
 }
+
 ?>
 
 <!DOCTYPE html>

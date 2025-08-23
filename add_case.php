@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <footer style="text-align:center; padding:15px; background:rgba(0,0,0,0.85);">
-    <p>Developed by: Rezwan | Project ID: 311</p>
+    <p>Developed by: Rezwan,SHORONIKA,RIZWAN, RAHI | Project ID: 311</p>
 </footer>
 
 <script>
